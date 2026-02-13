@@ -8,6 +8,11 @@ function Todolist() {
   const [todos, setTodos] = useState([]);
   const [taskText, setTaskText] = useState("");
   const [user, setUser] = useState([]);
+
+  function hdlChang(e) {
+    setTaskText(e.target.value);
+  }
+
   useEffect(() => {
     fetchtodo();
   }, []);
@@ -20,21 +25,21 @@ function Todolist() {
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify({ content: "example" }),
+        body: JSON.stringify({ content: taskText }),
       },
     )
       .then((resp) => resp.json())
       .then((data) => {
         setUser(data);
         console.log(data);
+        fetchtodo();
       });
-    console.log(JSON.stringify({ content: "example" }));
   };
   const fetchtodo = async () => {
     const res = await axios.get(
       `https://drive-accessible-pictures-send.trycloudflare.com/todos/${id}`,
     );
-    console.log(res.data);
+    setTodos(res.data);
   };
   return (
     <div className="flex justify-center items-center min-h-[85vh] bg-gray-50">
@@ -47,6 +52,7 @@ function Todolist() {
             className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-transparent transition"
             type="text"
             placeholder="new task "
+            onChange={hdlChang}
           />
           <button
             type="button"
@@ -55,12 +61,12 @@ function Todolist() {
           >
             add
           </button>
-          <ul>
-            {todos.map((el) => (
-              <li key={el.id}>{el.username}</li>
-            ))}
-          </ul>
         </form>
+        <ul>
+          {todos.map((e) => (
+            <p key={id}>{e.content}</p>
+          ))}
+        </ul>
       </div>
     </div>
   );
