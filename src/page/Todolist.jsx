@@ -13,6 +13,14 @@ function Todolist() {
     setTaskText(e.target.value);
   }
 
+  const hdlRemove = async (e) => {
+    const todoID = e.id;
+    await axios.delete(
+      `https://drive-accessible-pictures-send.trycloudflare.com/todos/11/${todoID}`,
+    );
+    fetchtodo();
+  };
+
   useEffect(() => {
     fetchtodo();
   }, []);
@@ -47,9 +55,9 @@ function Todolist() {
         <h2 className="text-3xl font-bold text-center text-slate-800 mb-6">
           My Todo
         </h2>
-        <form className="space-y-4">
+        <form className=" flex">
           <input
-            className="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-teal-400 focus:border-transparent transition"
+            className="border-b border-gray-300    w-full"
             type="text"
             placeholder="new task "
             onChange={hdlChang}
@@ -62,11 +70,29 @@ function Todolist() {
             add
           </button>
         </form>
-        <ul>
+
+        <form>
           {todos.map((e) => (
-            <p key={id}>{e.content}</p>
+            <div className="flex justify-between gap-5">
+              <div className=" flex gap-4">
+                <input type="checkbox" checked={e.isdone} />
+                <p>{e.content}</p>
+              </div>
+
+              <div className="flex gap-5">
+                <button>Edit</button>
+                <p
+                  key={e.id}
+                  onClick={() => {
+                    hdlRemove(e);
+                  }}
+                >
+                  x
+                </p>
+              </div>
+            </div>
           ))}
-        </ul>
+        </form>
       </div>
     </div>
   );
